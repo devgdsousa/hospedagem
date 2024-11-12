@@ -3,23 +3,49 @@ using DesafioProjetoHospedagem.Models;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-// Cria os modelos de hóspedes e cadastra na lista de hóspedes
+
+Console.Write("Digite o número de hóspedes: ");
+int quantidadeHospedes = int.Parse(Console.ReadLine());
+
 List<Pessoa> hospedes = new List<Pessoa>();
 
-Pessoa p1 = new Pessoa(nome: "Hóspede 1");
-Pessoa p2 = new Pessoa(nome: "Hóspede 2");
+// Loop para adicionar cada hóspede com entrada de nome
+for (int i = 1; i <= quantidadeHospedes; i++)
+{
+    Console.Write($"Digite o nome do hóspede {i}: ");
+    string nomeHospede = Console.ReadLine();
+    hospedes.Add(new Pessoa(nome: nomeHospede));
+}
 
-hospedes.Add(p1);
-hospedes.Add(p2);
 
-// Cria a suíte
-Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
+Console.Write("Digite o tipo da suíte: ");
+string tipoSuite = Console.ReadLine();
 
-// Cria uma nova reserva, passando a suíte e os hóspedes
-Reserva reserva = new Reserva(diasReservados: 5);
+Console.Write("Digite a capacidade da suíte: ");
+int capacidadeSuite = int.Parse(Console.ReadLine());
+
+Console.Write("Digite o valor da diária da suíte: ");
+decimal valorDiaria = decimal.Parse(Console.ReadLine());
+
+
+Suite suite = new Suite(tipoSuite: tipoSuite, capacidade: capacidadeSuite, valorDiaria: valorDiaria);
+
+
+Console.Write("Digite a quantidade de dias reservados: ");
+int diasReservados = int.Parse(Console.ReadLine());
+
+
+Reserva reserva = new Reserva(diasReservados: diasReservados);
 reserva.CadastrarSuite(suite);
-reserva.CadastrarHospedes(hospedes);
 
-// Exibe a quantidade de hóspedes e o valor da diária
-Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
-Console.WriteLine($"Valor diária: {reserva.CalcularValorDiaria()}");
+try
+{
+    reserva.CadastrarHospedes(hospedes);
+
+    Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
+    Console.WriteLine($"Valor total da estadia: {reserva.CalcularValorDiaria():C}");
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Erro: {ex.Message}");
+}
